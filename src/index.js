@@ -1,16 +1,20 @@
 const express = require('express');
 const app = express();
+const handlebars = require('express-handlebars');
 
 const path = require('path');
 
 const router = require("./router");
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static( 'public'));
 app.use(express.urlencoded({ extended: true }));
 
-app.get('/', (req, res) => {
-	res.send('<h1>Hello World!</h1>');
-});
+app.engine('hbs', handlebars.engine({
+	extname: 'hbs',
+}));
+
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'hbs');
 
 app.use(router)
 
