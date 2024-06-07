@@ -1,0 +1,21 @@
+<div>
+    {{#if error}}
+    <div class="errorContainer">
+        <p>{{error}}</p>
+    </div>
+</div>
+        {{/if}}
+
+
+<section class="login-form-container">
+
+    <form method="post">
+        <h3>Login</h3>
+        <label>Email</label>
+        <input type="email" name="email" class="box" >
+        <label>Password</label>
+        <input type="password" name="password" class="box" >
+        <input type="submit" value="Login" class="btn">
+        <p>Don't have an account ? <a href="/auth/register">Create one</a></p>
+    </form>
+</section>

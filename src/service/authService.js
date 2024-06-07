@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
-const {SECRET} = require('../config')
+const {SECRET} = require('../config');
+const bcrypt = require('bcrypt');
 
 exports.register = async (userData) => {
 	if (userData.password !== userData.rePassword) {
@@ -19,6 +20,25 @@ exports.register = async (userData) => {
 
 	return token;
 }
+
+exports.login = async ({email, password}) => {
+	const user = await User.findOne({email});
+
+	if (!user) {
+		throw new Error('User does not exist');
+	}
+
+	const isValid = await bcrypt.compare(password, user.password);
+
+	if (!isValid) {
+		throw new Error('Invalid password');
+	}
+
+	const token = await generateToken(user);
+
+	return token;
+}
+
 
 async function generateToken(user) {
 	const payload = {
