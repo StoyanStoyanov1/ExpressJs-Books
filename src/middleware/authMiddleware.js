@@ -1,6 +1,6 @@
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
-const { SECRET } = require('../config');
+const {SECRET} = require('../config');
 
 exports.authMiddleware = async (req, res, next) => {
 	const token = req.cookies['auth'];
@@ -13,7 +13,7 @@ exports.authMiddleware = async (req, res, next) => {
 		const decodedToken = await jwt.verify(token, SECRET);
 
 		req.user = decodedToken;
-		req.local.isAuthenticated = true;
+		res.locals.isAuthenticated = true;
 		res.locals.user = decodedToken;
 
 		next();
@@ -21,12 +21,14 @@ exports.authMiddleware = async (req, res, next) => {
 		res.clearCookie('auth');
 		res.redirect('/auth/login');
 	}
-};
+}
 
 exports.isAuth = (req, res, next) => {
 	if (!req.user) {
-		res.redirect('auth/login');
+		res.redirect('/auth/register');
 	}
 
 	next();
 }
+
+
