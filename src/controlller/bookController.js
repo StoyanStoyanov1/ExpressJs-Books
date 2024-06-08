@@ -25,4 +25,13 @@ router.get('/catalog', async (req, res) => {
 	res.render('book/catalog', {books})
 });
 
+router.get('/:bookId/details', async (req, res) => {
+	const bookId = req.params.bookId;
+
+	const book = await bookService.getOne(bookId).lean();
+
+	res.render('book/details', {book});
+
+
+})
 module.exports = router;
