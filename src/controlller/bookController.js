@@ -12,11 +12,17 @@ router.post('/create', async (req, res) => {
 
 	try {
 		await bookService.create(bookData);
-		res.redirect('/')
+		res.redirect('/book/catalog')
 	} catch (err) {
 		res.render('book/create', {...bookData,error: getErrorMessage(err)});
 	}
 
-})
+});
+
+router.get('/catalog', async (req, res) => {
+	const books = await bookService.getAll().lean();
+
+	res.render('book/catalog', {books})
+});
 
 module.exports = router;
