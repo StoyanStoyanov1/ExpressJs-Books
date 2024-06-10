@@ -7,3 +7,5 @@ exports.getAll = () => Book.find();
 exports.getOne = (bookId) => Book.findById(bookId);
 
 exports.delete = (bookId) => Book.findByIdAndDelete(bookId);
+
+exports.edit = (bookId, bookData) => Book.findByIdAndUpdate(bookId, {...bookData});

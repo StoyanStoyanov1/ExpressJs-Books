@@ -14,7 +14,7 @@ router.post('/create', async (req, res) => {
 		await bookService.create(bookData);
 		res.redirect('/book/catalog')
 	} catch (err) {
-		res.render('book/create', {...bookData,error: getErrorMessage(err)});
+		res.render('book/create', {...bookData, error: getErrorMessage(err)});
 	}
 
 });
@@ -52,5 +52,29 @@ router.get('/:bookId/delete', async (req, res) => {
 	await bookService.delete(bookId);
 
 	res.redirect('/book/catalog/');
+});
+
+router.get('/:bookId/edit', async (req, res) => {
+	const bookId = req.params.bookId;
+
+	try {
+		const book = await bookService.getOne(bookId).lean();
+		res.render('book/edit', {...book});
+
+	} catch (err) {
+		res.redirect(`/book/catalog`);
+		res.render('book/catalog', {error: getErrorMessage(err)});
+	}
+});
+
+router.post('/:bookId/edit', async (req, res) => {
+	try {
+		const bookData = req.body;
+		const bookId = req.params.bookId;
+		await bookService.edit(bookId, bookData);
+		res.redirect(`/book/${bookId}/details`)
+	} catch (err) {
+		res.render('book/edit', {error: getErrorMessage(err)})
+	}
 })
 module.exports = router;
