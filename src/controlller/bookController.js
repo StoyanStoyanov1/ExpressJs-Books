@@ -1,18 +1,20 @@
 const router = require('express').Router();
 const bookService = require('../service/bookService');
 const {getErrorMessage} = require('../utils/errorUtils')
+const {isAuth} = require("../middleware/authMiddleware");
 
-router.get('/create', (req, res) => {
+router.get('/create', isAuth, (req, res) => {
 	res.render('book/create');
 });
 
-router.post('/create', async (req, res) => {
+router.post('/create', isAuth, async (req, res) => {
 	const bookData = req.body;
 	bookData.owner = req.user._id;
 
 	try {
-		await bookService.create(bookData);
-		res.redirect('/book/catalog')
+		const book = await bookService.create(bookData);
+		await bookService.pushBookInBookList(book._id, req.user._id);
+		res.redirect('/book/catalog');
 	} catch (err) {
 		res.render('book/create', {...bookData, error: getErrorMessage(err)});
 	}
@@ -37,7 +39,7 @@ router.get('/:bookId/details', async (req, res) => {
 
 });
 
-router.get('/:bookId/delete', async (req, res) => {
+router.get('/:bookId/delete',  isAuth, async (req, res) => {
 	const bookId = req.params.bookId;
 	const userId = req.user?._id;
 
@@ -54,7 +56,7 @@ router.get('/:bookId/delete', async (req, res) => {
 	res.redirect('/book/catalog/');
 });
 
-router.get('/:bookId/edit', async (req, res) => {
+router.get('/:bookId/edit', isAuth, async (req, res) => {
 	const bookId = req.params.bookId;
 
 	try {
@@ -67,7 +69,7 @@ router.get('/:bookId/edit', async (req, res) => {
 	}
 });
 
-router.post('/:bookId/edit', async (req, res) => {
+router.post('/:bookId/edit', isAuth, async (req, res) => {
 	try {
 		const bookData = req.body;
 		const bookId = req.params.bookId;
