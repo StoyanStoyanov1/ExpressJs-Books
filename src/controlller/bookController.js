@@ -90,5 +90,6 @@ router.get('/:bookId/read', async (req, res) => {
 
 	res.redirect(`/book/${bookId}/details`);
 
-})
+});
+
 module.exports = router;
