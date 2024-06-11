@@ -35,7 +35,9 @@ router.get('/:bookId/details', async (req, res) => {
 
 	const isOwner = book.owner == userId;
 
-	res.render('book/details', {book, isOwner});
+	const isRead = await bookService.hasUserReadBook(bookId, userId);
+
+	res.render('book/details', {book, isOwner, isRead});
 
 });
 
@@ -78,5 +80,15 @@ router.post('/:bookId/edit', isAuth, async (req, res) => {
 	} catch (err) {
 		res.render('book/edit', {error: getErrorMessage(err)})
 	}
+});
+
+router.get('/:bookId/read', async (req, res) => {
+	const bookId = req.params.bookId;
+	const userId = req.user?._id;
+
+	await bookService.readBook(bookId, userId);
+
+	res.redirect(`/book/${bookId}/details`);
+
 })
 module.exports = router;

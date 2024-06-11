@@ -23,3 +23,18 @@ exports.pushUserInWishingList = (bookId, userId) => Book.findByIdAndUpdate(bookI
 exports.pushBookInWishingBooks = (bookId, userId) => User.findByIdAndUpdate(userId, {$push: {wishingBooks: bookId}});
 
 exports.pushBookInBookList = (bookId, userId) => User.findByIdAndUpdate(userId, {$push: {bookList: bookId}});
+
+exports.hasUserReadBook = async (bookId, userId) => {
+	try {
+		const user = await User.findOne({ _id: userId, wishingBooks: bookId });
+		return user !== null;
+	} catch (err) {
+		console.error('Error checking if user has read the book:', err);
+		return false;
+	}
+};
+
+exports.readBook = async (bookId, userId) => {
+	await User.findByIdAndUpdate(userId, {$push: {wishingBooks: bookId}}, {new: true});
+	await Book.findByIdAndUpdate(bookId, {$push: {wishingList: userId}}, {new: true});
+}
