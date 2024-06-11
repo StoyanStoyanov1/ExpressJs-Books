@@ -51,7 +51,7 @@ router.get('/:bookId/delete',  isAuth, async (req, res) => {
 		return res.redirect('/book/catalog');
 	}
 
-	await bookService.delete(bookId);
+	await bookService.delete(bookId, userId);
 
 	res.redirect('/book/catalog/');
 });
