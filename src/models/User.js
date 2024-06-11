@@ -5,14 +5,33 @@ const userSchema = mongoose.Schema({
 	username: {
 		type: String,
 		required: true,
+		validate: {
+			validator: (value) => {
+				return value.length > 4;
+			},
+			message: 'Username must be at least 4 characters.',
+		},
 	},
 	email: {
 		type: String,
 		required: true,
+		validate: {
+			validator: (value) => {
+				return value.length > 4;
+			},
+			message: 'Email must be at least 4 characters.',
+		}
 	},
 	password: {
 		type: String,
+		minLength: 3,
 		required: true,
+		validate: {
+			validator: (value) => {
+				return value.length > 3;
+			},
+			message: 'Password must be at least 3 characters.',
+		}
 	},
 	bookList: [{
 		type: mongoose.Schema.Types.ObjectId,
